@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- 🛡️ Základní informace o systému -->
+    <section class="card">
+        <h2>🛡️ Základní informace</h2>
+        <div class="info-item"><span class="label">🖥️ Název PC:</span> {{ sys_info.hostname }}</div>
+        <div class="info-item"><span class="label">💻 Verze Win:</span> {{ sys_info.os }} {{ sys_info.os_release }} (v{{ sys_info.os_version }})</div>
+        <div class="info-item"><span class="label">🌐 IP Adresa:</span> {{ sys_info.ip_address }}</div>
+        <div class="info-item"><span class="label">⚙️ Procesor:</span> {{ sys_info.cpu_count }} jader @ {{ sys_info.cpu_freq }} MHz</div>
+    </section>
+
+    <!-- ⚙️ Živé metriky -->
+    <section class="card">
+        <h2>📊 Aktuální stav</h2>
+        <div class="metric">
+            <span class="label">⚙️ CPU:</span>
+            <span id="cpu-val">{{ metrics.cpu_usage }}</span>%
+        </div>
+        <div class="metric">
+            <span class="label">🧠 RAM:</span>
+            <span id="ram-val">{{ metrics.ram_usage }}</span>% 
+            <small>({{ metrics.ram_used_gb }} / {{ metrics.ram_total_gb }} GB)</small>
+        </div>
+        <div class="metric">
+            <span class="label">💾 Disk C:</span>
+            <span id="disk-val">{{ metrics.disk_usage }}</span>%
+            <small>({{ metrics.disk_used_gb }} / {{ metrics.disk_total_gb }} GB)</small>
+        </div>
+        <div class="metric">
+            <span class="label">⏱️ Uptime:</span>
+            <span id="uptime-val">{{ metrics.uptime }}</span>
+        </div>
+        <div class="metric">
+            <span class="label">🔋 Baterie:</span>
+            <span id="battery-val">{{ metrics.battery }}</span>
+        </div>
+    </section>
+</div>
+
+<!-- Historie -->
+<section class="card table-card">
+    <h2>📈 Historie zatížení (posledních 10 záznamů)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Čas</th>
+                <th>CPU</th>
+                <th>RAM</th>
+                <th>Disk</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in history %}
+            <tr>
+                <td>{{ row.timestamp }}</td>
+                <td>{{ row.cpu_usage }}%</td>
+                <td>{{ row.ram_usage }}%</td>
+                <td>{{ row.disk_usage }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<script>
+    // Real-time aktualizace každé 3 sekundy
+    setInterval(() => {
+        fetch('/api/metrics')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cpu-val').innerText = data.cpu_usage;
+                document.getElementById('ram-val').innerText = data.ram_usage;
+                document.getElementById('disk-val').innerText = data.disk_usage;
+                document.getElementById('uptime-val').innerText = data.uptime;
+                document.getElementById('battery-val').innerText = data.battery;
+            });
+    }, 3000);
+</script>
+{% endblock %}
