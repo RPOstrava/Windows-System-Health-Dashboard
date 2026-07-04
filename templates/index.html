@@ -6,7 +6,7 @@
     <section class="card">
         <h2>🛡️ Základní informace</h2>
         <div class="info-item"><span class="label">🖥️ Název PC:</span> {{ sys_info.hostname }}</div>
-        <div class="info-item"><span class="label">💻 Verze Win:</span> {{ sys_info.os }} {{ sys_info.os_release }} (v{{ sys_info.os_version }})</div>
+        <div class="info-item"><span class="label">🌐 Anonymní IP:</span> {{ sys_info.ip_address }}</div>
         <div class="info-item"><span class="label">🌐 IP Adresa:</span> {{ sys_info.ip_address }}</div>
         <div class="info-item"><span class="label">⚙️ Procesor:</span> {{ sys_info.cpu_count }} jader @ {{ sys_info.cpu_freq }} MHz</div>
     </section>
