@@ -12,3 +12,8 @@ database/health.db
 
 # Nastavení editoru
 .vscode/
+
+# PyInstaller outputs
+build/
+dist/
+*.spec
